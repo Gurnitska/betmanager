@@ -15,7 +15,7 @@ import com.gurnitskaya.bmanager.dao.BetDAO;
 public class BetImplDAO extends AbstractHibernateHelper implements BetDAO{
 
 	@Override
-	public void addStudent(Bet bet) throws SQLException {
+	public void addBet(Bet bet) throws SQLException {
 		Session session = getSessionFactory().getCurrentSession();
 		Transaction tx = null;
 		Integer betID = null;
@@ -39,19 +39,19 @@ public class BetImplDAO extends AbstractHibernateHelper implements BetDAO{
 	}
 
 	@Override
-	public void updateStudent(Bet bet) throws SQLException {
+	public void updateBet(Bet bet) throws SQLException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Bet getStudentById(Long id) throws SQLException {
+	public Bet getBetById(Long id) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<Bet> getAllStudents() throws SQLException {
+	public List<Bet> getAllBets() throws SQLException {
 		Session session = getSessionFactory().getCurrentSession();
 		Transaction tx = null;
 		List<Bet> bets = null;
@@ -81,7 +81,7 @@ public class BetImplDAO extends AbstractHibernateHelper implements BetDAO{
 	}
 
 	@Override
-	public void deleteStudent(Bet bet) throws SQLException {
+	public void deleteBet(Bet bet) throws SQLException {
 		// TODO Auto-generated method stub
 		
 	}

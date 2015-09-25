@@ -1,11 +1,13 @@
 package com.gurnitskaya.bmanager;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 
 import com.gurnitskaya.bmanager.model.BetWrapper;
 import com.gurnitskaya.bmanager.view.BetEditDialogController;
 import com.gurnitskaya.bmanager.view.BetOverviewController;
+import com.gurnitskaya.bmanager.view.RootLayoutController;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -53,6 +55,11 @@ public class Main extends Application {
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
+            
+         // Give the controller access to the main app.
+            RootLayoutController controller = loader.getController();
+            controller.setMainApp(this);
+            
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -130,6 +137,10 @@ public class Main extends Application {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public void loadBetsFromExcelFile(File file){
+    	
     }
     public static void main(String[] args) {
         launch(args);

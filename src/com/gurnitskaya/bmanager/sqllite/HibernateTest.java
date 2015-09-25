@@ -20,8 +20,8 @@ public class HibernateTest {
 		BetImplDAO betImpl = new BetImplDAO();
 		Bet bet = new Bet(new Date(), "Bundesliga", "Bayer", "Munech", "df", 45, 1.2, 12, "3-0");
 		try {
-			System.out.println(betImpl.getAllStudents());
-			betImpl.addStudent(bet);
+			System.out.println(betImpl.getAllBets());
+			betImpl.addBet(bet);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
