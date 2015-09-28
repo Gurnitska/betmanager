@@ -5,7 +5,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="450.0" prefWidth="500.0" styleClass="background" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gurnitskaya.bmanager.view.BetEditDialogController">
+<AnchorPane prefHeight="450.0" prefWidth="500.0" styleClass="background" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
+fx:controller="com.gurnitskaya.bmanager.view.BetEditDialogController">
    <children>
       <GridPane prefHeight="257.0" prefWidth="300.0" AnchorPane.bottomAnchor="43.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -33,15 +34,15 @@
             <Label text="Bet koef" GridPane.rowIndex="6" />
             <Label text="Result" GridPane.rowIndex="7" />
             <Label text="Game result" GridPane.rowIndex="8" />
-            <TextField fx:id="dateField" GridPane.columnIndex="1" />
-            <TextField fx:id="leagueField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="homeCommandField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="guestCommandField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="typeField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextField fx:id="valueField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <TextField fx:id="koefField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <TextField fx:id="resultField" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <TextField fx:id="gameResultField" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <TextField fx:id="scoreField" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <DatePicker fx:id="dateField" GridPane.columnIndex="1" />
+            <ComboBox fx:id="leagueField" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
       <HBox layoutX="166.0" layoutY="407.0" spacing="10.0" AnchorPane.bottomAnchor="10.0">

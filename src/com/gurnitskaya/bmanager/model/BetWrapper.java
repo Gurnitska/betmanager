@@ -1,8 +1,7 @@
 package com.gurnitskaya.bmanager.model;
 
+import java.sql.Date;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -21,7 +20,7 @@ import javafx.beans.property.StringProperty;
 /**
  * Model class for a Bet.
  *
- * @author Olga Gurnitskaya
+ * @author Olga gurn
  */
 
 public class BetWrapper {
@@ -35,7 +34,7 @@ public class BetWrapper {
     private final IntegerProperty value;
     private final DoubleProperty koef;
     private final DoubleProperty result;
-    private final StringProperty gameResult;
+    private final StringProperty score;
     private final Bet bet;
     /**
      * Default constructor.
@@ -54,17 +53,17 @@ public class BetWrapper {
      * @param value
      * @param koef
      * @param result
-     * @param gameResult
+     * @param score
      */
 	public BetWrapper(int id,LocalDate localDate, String league,
 			String homeCommand, String guestCommand,
-			String type, int value, double koef, double result, String gameResult) {
+			String type, int value, double koef, double result, String score) {
 		super();
 		Date date = null;
 		if(localDate != null){
-			date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			date = Date.valueOf(localDate.toString());;
 		}
-		this.bet = new Bet(id, date, league, homeCommand, guestCommand, type, value, koef, result, gameResult);
+		this.bet = new Bet(id, date, league, homeCommand, guestCommand, type, value, koef, result, score);
 		this.id = new SimpleIntegerProperty(value);
 		this.date = new SimpleObjectProperty<LocalDate>(localDate);
 		this.league = new SimpleStringProperty(league);
@@ -74,7 +73,7 @@ public class BetWrapper {
 		this.value = new SimpleIntegerProperty(value);
 		this.koef = new SimpleDoubleProperty(koef);
 		this.result = new SimpleDoubleProperty(result);
-		this.gameResult = new SimpleStringProperty(gameResult);
+		this.score = new SimpleStringProperty(score);
 	}
 	/**
      * Constructor with initial data.
@@ -93,72 +92,90 @@ public class BetWrapper {
 		this.value = new SimpleIntegerProperty(bet.getValue());
 		this.koef = new SimpleDoubleProperty(bet.getKoef());
 		this.result = new SimpleDoubleProperty(bet.getResult());
-		this.gameResult = new SimpleStringProperty(bet.getGameResult());
+		this.score = new SimpleStringProperty(bet.getScore());
 	}
 	
 	public Integer getId() {
 		return id.get();
 	}
 	public void setId(int result) {
+		this.bet.setId(result);
 		this.id.set(result);
 	}
 	public Double getResult() {
 		return result.get();
 	}
 	public void setResult(double result) {
+		this.bet.setResult(result);
 		this.result.set(result);
 	}
-	public String getGameResult() {
-		return gameResult.get();
+	public String getScore() {
+		return score.get();
 	}
-	public void setGameResult(String gameResult) {
-		this.gameResult.set(gameResult);
+	public void setScore(String gameResult) {
+		this.bet.setScore(gameResult);
+		this.score.set(gameResult);
 	}
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
 	public LocalDate getDate() {
 		return date.get();
 	}
     public void setDate(LocalDate date) {
+    	this.bet.setDateAsLocalDate(date);
 		this.date.set(date);
 	}
 	public String getLeague() {
 		return league.get();
 	}
 	public void setLeague(String league) {
+		this.bet.setLeague(league);
 		this.league.set(league);
 	}
 	public String getHomeCommand() {
 		return homeCommand.get();
 	}
 	public void setHomeCommand(String homeCommand) {
+		this.bet.setHomeCommand(homeCommand);
 		this.homeCommand.set(homeCommand);
 	}
 	public String getGuestCommand() {
 		return guestCommand.get();
 	}
 	public void setGuestCommand(String guestCommand) {
+		this.bet.setGuestCommand(guestCommand);
 		this.guestCommand.set(guestCommand);
 	}
 	public String getType() {
 		return type.get();
 	}
 	public void setType(String type) {
+		this.bet.setType(type);
 		this.type.set(type);
 	}
 	public Integer getValue() {
 		return value.get();
 	}
 	public void setValue(int value) {
+		this.bet.setValue(value);
 		this.value.set(value);
 	}
 	public Double getKoef() {
 		return koef.get();
 	}
 	public void setKoef(double koef) {
+		this.bet.setKoef(koef);
 		this.koef.set(koef);
 	}
 	public Bet getBet() {
 		return bet;
+	}
+	@Override
+	public String toString() {
+		return "BetWrapper [id=" + id + ", date=" + date + ", league=" + league
+				+ ", homeCommand=" + homeCommand + ", guestCommand="
+				+ guestCommand + ", type=" + type + ", value=" + value
+				+ ", koef=" + koef + ", result=" + result + ", score=" + score
+				+ ", bet=" + bet + "]";
 	}
     
 }

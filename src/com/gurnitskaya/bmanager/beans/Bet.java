@@ -40,7 +40,7 @@ public class Bet implements Serializable{
 	private int value;
 	private double koef;
 	private double result;
-	private String gameResult;
+	private String score;
 	
 	public int getId() {
 		return id;
@@ -50,17 +50,21 @@ public class Bet implements Serializable{
 		this.id = id;
 	}
 
-	public Date getDate() {
+	public java.util.Date getDate() {
 		return date;
 	}
 	public LocalDate getDateAsLocalDate(){
-		Instant instant = date.toInstant();
+		Instant instant = new java.util.Date(date.getTime()).toInstant();
 		ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
 		return zdt.toLocalDate();
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setDate(java.sql.Date date) {
+		this.date = new java.util.Date(date.getTime());
+	}
+	
+	public void setDateAsLocalDate(LocalDate date) {
+		this.date = java.sql.Date.valueOf(date.toString());;
 	}
 
 	public String getLeague() {
@@ -119,12 +123,12 @@ public class Bet implements Serializable{
 		this.result = result;
 	}
 
-	public String getGameResult() {
-		return gameResult;
+	public String getScore() {
+		return score;
 	}
 
-	public void setGameResult(String gameResult) {
-		this.gameResult = gameResult;
+	public void setScore(String score) {
+		this.score = score;
 	}
 
 	public Bet() {
@@ -132,11 +136,11 @@ public class Bet implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	public Bet(Date date, String league, String homeCommand,
+	public Bet(java.sql.Date date, String league, String homeCommand,
 			String guestCommand, String type, int value, double koef,
-			double result, String gameResult) {
+			double result, String score) {
 		super();
-		this.date = date;
+		this.date = new java.util.Date(date.getTime());
 		this.league = league;
 		this.homeCommand = homeCommand;
 		this.guestCommand = guestCommand;
@@ -144,15 +148,15 @@ public class Bet implements Serializable{
 		this.value = value;
 		this.koef = koef;
 		this.result = result;
-		this.gameResult = gameResult;
+		this.score = score;
 	}
 
-	public Bet(int id, Date date, String league, String homeCommand,
+	public Bet(int id, java.sql.Date date, String league, String homeCommand,
 			String guestCommand, String type, int value, double koef,
-			double result, String gameResult) {
+			double result, String score) {
 		super();
 		this.id = id;
-		this.date = date;
+		this.date = (date == null) ? new Date(): new Date(date.getTime());
 		this.league = league;
 		this.homeCommand = homeCommand;
 		this.guestCommand = guestCommand;
@@ -160,8 +164,17 @@ public class Bet implements Serializable{
 		this.value = value;
 		this.koef = koef;
 		this.result = result;
-		this.gameResult = gameResult;
+		this.score = score;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Bet [id=" + id + ", date=" + date + ", league=" + league
+				+ ", homeCommand=" + homeCommand + ", guestCommand="
+				+ guestCommand + ", type=" + type + ", value=" + value
+				+ ", koef=" + koef + ", result=" + result + ", score=" + score
+				+ "]";
+	}
+
 	
 }

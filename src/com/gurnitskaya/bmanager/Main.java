@@ -2,8 +2,12 @@ package com.gurnitskaya.bmanager;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
+import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import com.gurnitskaya.bmanager.beans.Bet;
+import com.gurnitskaya.bmanager.impl.BetImplDAO;
 import com.gurnitskaya.bmanager.model.BetWrapper;
 import com.gurnitskaya.bmanager.view.BetEditDialogController;
 import com.gurnitskaya.bmanager.view.BetOverviewController;
@@ -19,9 +23,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 public class Main extends Application {
-
+	static Logger logger = Logger.getLogger(Main.class.getName());
+	private BetImplDAO betImpl;
     private Stage primaryStage;
     private BorderPane rootLayout;
+    private RootLayoutController rootController;
     private ObservableList<BetWrapper> betData = FXCollections.observableArrayList();
     @Override
     public void start(Stage primaryStage) {
@@ -35,12 +41,15 @@ public class Main extends Application {
     /**
      * Constructor
      */
-    public Main() {
-        // Add some sample data
-        betData.add(new BetWrapper(1, LocalDate.of(1999, 2, 21), "Bundesliga", "Bayer", "Munech", "df", 45, 1.2, 12, "3-0"));
-        betData.add(new BetWrapper(2, LocalDate.of(1999, 2, 21), "Seria A", "Milan", "Juventus", "df", 45, 1.55, 12, "1-0"));
+	public Main() {
+		betImpl = new BetImplDAO();
 
-    }
+		List<Bet> bets = betImpl.getAllBets();
+		for (Bet bet : bets) {
+			betData.add(new BetWrapper(bet));
+		}
+
+	}
 
     /**
      * Initializes the root layout.
@@ -56,13 +65,13 @@ public class Main extends Application {
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             
-         // Give the controller access to the main app.
-            RootLayoutController controller = loader.getController();
-            controller.setMainApp(this);
+            rootController = loader.getController();
+            rootController.setMainApp(this);
             
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error("Sorry, something wrong!", e);
         }
     }
 
@@ -81,9 +90,12 @@ public class Main extends Application {
             
             // Give the controller access to the main app.
             BetOverviewController controller = loader.getController();
+            
             controller.setMainApp(this);
+            rootController.setBetOverviewController(controller);
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error("Sorry, something wrong!", e);
         }
     }
 
@@ -102,6 +114,13 @@ public class Main extends Application {
         return betData;
     }
     /**
+     * Returns the object with works with database. 
+     * @return
+     */
+    public BetImplDAO getBetImpl() {
+		return betImpl;
+	}
+	/**
      * Opens a dialog to edit details for the specified bet. If the user
      * clicks OK, the changes are saved into the provided bet object and true
      * is returned.
@@ -109,7 +128,7 @@ public class Main extends Application {
      * @param bet the bet object to be edited
      * @return true if the user clicked OK, false otherwise.
      */
-    public boolean showBetEditDialog(BetWrapper person) {
+    public boolean showBetNewEditDialog(BetWrapper bet, String title) {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
@@ -118,16 +137,15 @@ public class Main extends Application {
 
             // Create the dialog Stage.
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("Edit Bet");
+            dialogStage.setTitle(title);
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
-
             // Set the bet into the controller.
             BetEditDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
-            controller.setPerson(person);
+            controller.setBet(bet);
 
             // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
@@ -135,14 +153,15 @@ public class Main extends Application {
             return controller.isOkClicked();
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error("Sorry, something wrong!", e);
             return false;
         }
     }
-    
     public void loadBetsFromExcelFile(File file){
     	
     }
     public static void main(String[] args) {
+    	logger.error("Sorry, something wrong!");
         launch(args);
     }
 }

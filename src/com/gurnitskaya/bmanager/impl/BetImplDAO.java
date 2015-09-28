@@ -1,6 +1,5 @@
 package com.gurnitskaya.bmanager.impl;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -15,7 +14,7 @@ import com.gurnitskaya.bmanager.dao.BetDAO;
 public class BetImplDAO extends AbstractHibernateHelper implements BetDAO{
 
 	@Override
-	public void addBet(Bet bet) throws SQLException {
+	public void addBet(Bet bet){
 		Session session = getSessionFactory().getCurrentSession();
 		Transaction tx = null;
 		Integer betID = null;
@@ -39,19 +38,19 @@ public class BetImplDAO extends AbstractHibernateHelper implements BetDAO{
 	}
 
 	@Override
-	public void updateBet(Bet bet) throws SQLException {
+	public void updateBet(Bet bet) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Bet getBetById(Long id) throws SQLException {
+	public Bet getBetById(Long id){
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<Bet> getAllBets() throws SQLException {
+	public List<Bet> getAllBets(){
 		Session session = getSessionFactory().getCurrentSession();
 		Transaction tx = null;
 		List<Bet> bets = null;
@@ -64,7 +63,7 @@ public class BetImplDAO extends AbstractHibernateHelper implements BetDAO{
 			while (iter.hasNext()) {
 				Bet bet = iter.next();
 				System.out.println("Bet: \"" + bet.getId() + "\", " + bet.getDate() + "\", "
-						+ bet.getHomeCommand() + "\", " + bet.getGameResult());
+						+ bet.getHomeCommand() + "\", " + bet.getScore() + bet.getDate().getClass());
 			}
 			tx.commit();
 		} catch (HibernateException e) {
@@ -81,8 +80,22 @@ public class BetImplDAO extends AbstractHibernateHelper implements BetDAO{
 	}
 
 	@Override
-	public void deleteBet(Bet bet) throws SQLException {
-		// TODO Auto-generated method stub
+	public void deleteBet(Bet bet){
+		Session session = getSessionFactory().getCurrentSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			session.delete(bet);
+			tx.commit();
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			if(session.isOpen()){
+				session.close();
+			}
+		}
 		
 	}
 

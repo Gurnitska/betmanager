@@ -3,9 +3,10 @@ package com.gurnitskaya.bmanager.view;
 import org.controlsfx.dialog.Dialogs;
 
 import com.gurnitskaya.bmanager.model.BetWrapper;
-import com.gurnitskaya.bmanager.util.DateUtil;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -15,10 +16,27 @@ import javafx.stage.Stage;
  * @author Olga Gurnitskaya
  */
 public class BetEditDialogController {
+	enum League{
+		SERIA_A("Seria A"), PREMIER("Premier league");
+		private String league;
+		private League(String league){
+			this.league = league;
+		}
+		public String getLeague(){
+			return league;
+		}
+		public static League getValue(String league){
+			for(League value :League.values()){
+				if(value.getLeague().equals(league))
+					return value;
+			}
+			return null;
+		}
+	}
     @FXML
-    private TextField dateField;
+    private DatePicker dateField;
     @FXML
-    private TextField leagueField;
+    private ComboBox<League> leagueField;
     @FXML
     private TextField homeCommandField;
     @FXML
@@ -32,7 +50,7 @@ public class BetEditDialogController {
     @FXML
     private TextField resultField;
     @FXML
-    private TextField gameResultField;
+    private TextField scoreField;
     
     private Stage dialogStage;
     private BetWrapper bet;
@@ -60,19 +78,23 @@ public class BetEditDialogController {
      * 
      * @param person
      */
-    public void setPerson(BetWrapper bet) {
+    public void setBet(BetWrapper bet) {
         this.bet = bet;
-
-        dateField.setText(DateUtil.format(bet.getDate()));
+        dateField.setValue(bet.getDate());
         dateField.setPromptText("dd.mm.yyyy");
-        leagueField.setText(bet.getLeague());
+        leagueField.getItems().addAll(League.values());
+        if(bet.getLeague() == null){
+        	leagueField.setValue(League.PREMIER);
+        } else {
+        	leagueField.setValue(League.getValue(bet.getLeague()));
+        }
         homeCommandField.setText(bet.getHomeCommand());
         guestCommandField.setText(bet.getGuestCommand());
         typeField.setText(bet.getType());
         valueField.setText(bet.getValue().toString());
         koefField.setText(bet.getKoef().toString());
         resultField.setText(bet.getResult().toString());
-        gameResultField.setText(bet.getGameResult());
+        scoreField.setText(bet.getScore());
     }
     
     /**
@@ -90,15 +112,15 @@ public class BetEditDialogController {
     @FXML
     private void handleOk() {
         if (isInputValid()) {
-            bet.setDate(DateUtil.parse(dateField.getText()));
-            bet.setLeague(leagueField.getText());
+            bet.setDate(dateField.getValue());
+            bet.setLeague(leagueField.getValue().league);
             bet.setHomeCommand(homeCommandField.getText());
             bet.setGuestCommand(guestCommandField.getText());
             bet.setType(typeField.getText());
             bet.setValue(Integer.parseInt(valueField.getText()));
             bet.setKoef(Double.parseDouble(koefField.getText()));
             bet.setResult(Double.parseDouble(resultField.getText()));
-            bet.setGameResult(gameResultField.getText());
+            bet.setScore(scoreField.getText());
 
             okClicked = true;
             dialogStage.close();
@@ -121,14 +143,14 @@ public class BetEditDialogController {
         String errorMessage = "";
 
 
-        if (dateField.getText() == null || dateField.getText().length() == 0) {
+        if (dateField.getValue() == null) {
             errorMessage += "No valid date!\n";
         } else {
-            if (!DateUtil.validDate(dateField.getText())) {
-                errorMessage += "No valid date. Use the format dd.mm.yyyy!\n";
-            }
+//            if (!DateUtil.validDate(dateField.getValue())) {
+//                errorMessage += "No valid date. Use the format dd.mm.yyyy!\n";
+//            }
         }
-        if (leagueField.getText() == null || leagueField.getText().length() == 0) {
+        if (leagueField.getValue() == null) {
             errorMessage += "No valid league!\n"; 
         }
         if (homeCommandField.getText() == null || homeCommandField.getText().length() == 0) {
@@ -168,7 +190,7 @@ public class BetEditDialogController {
                 errorMessage += "No valid koef (must be an integer)!\n"; 
             }
         }
-        if (gameResultField.getText() == null || gameResultField.getText().length() == 0) {
+        if (scoreField.getText() == null || scoreField.getText().length() == 0) {
             errorMessage += "No valid game result!\n"; 
         }
 

@@ -1,7 +1,6 @@
 package com.gurnitskaya.bmanager.sqllite;
 
-import java.sql.SQLException;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,22 +15,19 @@ import com.gurnitskaya.bmanager.sqllite.utils.SessionFactoryUtil;
 
 public class HibernateTest {
 
-	public static void main(String[] args) {
-		BetImplDAO betImpl = new BetImplDAO();
-		Bet bet = new Bet(new Date(), "Bundesliga", "Bayer", "Munech", "df", 45, 1.2, 12, "3-0");
-		try {
-			System.out.println(betImpl.getAllBets());
-			betImpl.addBet(bet);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-//		addBet();
-//		queryBet();
-//		SessionFactoryUtil.getSessionFactory().close();
-
-	}
+//	public static void main(String[] args) {
+//		BetImplDAO betImpl = new BetImplDAO();
+//		Bet bet = new Bet(new Date(2014,12,23), "Bundesliga", "Bayer", "Munech", "df", 45, 1.2, 12, "3-0");
+//
+//			System.out.println(betImpl.getAllBets());
+//			betImpl.addBet(bet);
+//
+//
+////		addBet();
+////		queryBet();
+////		SessionFactoryUtil.getSessionFactory().close();
+//
+//	}
 
 	private static void queryBet() {
 		Session session = SessionFactoryUtil.getSessionFactory().openSession();
@@ -46,7 +42,7 @@ public class HibernateTest {
 			while (iter.hasNext()) {
 				Bet bet = iter.next();
 				System.out.println("Bet: \"" + bet.getDate() + "\", "
-						+ bet.getHomeCommand() + "\", " + bet.getGameResult());
+						+ bet.getHomeCommand() + "\", " + bet.getScore());
 			}
 			tx.commit();
 		} catch (HibernateException e) {
@@ -69,7 +65,7 @@ public class HibernateTest {
 		Integer betID = null;
 		try {
 			tx = session.beginTransaction();
-			Bet bet = new Bet(new Date(), "Bundesliga", "Bayer", "Munech", "df", 45, 1.2, 12, "3-0");
+			Bet bet = new Bet(new Date(2014,10,23), "Bundesliga", "Bayer", "Munech", "df", 45, 1.2, 12, "3-0");
 			betID = (Integer) session.save(bet);
 			tx.commit();
 		} catch (HibernateException e) {

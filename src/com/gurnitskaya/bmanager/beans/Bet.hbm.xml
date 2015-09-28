@@ -12,7 +12,7 @@
         </id>
  
         <property name="date">
-            <column name="date" type = length="16" not-null="true" />
+            <column name="date" type = "date" length="16" not-null="true" />
         </property>
  
         <property name="league">
@@ -43,8 +43,8 @@
             <column name="result" length="16" not-null="true" />
         </property>
  
-        <property name="gameResult">
-            <column name="gameResult" length="16" not-null="true" />
+        <property name="score">
+            <column name="score" length="16" not-null="true" />
         </property>
  
     </class>
