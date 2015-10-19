@@ -1,7 +1,14 @@
 package com.gurnitskaya.bmanager.view;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.controlsfx.dialog.Dialogs;
 
+import com.gurnitskaya.bmanager.beans.League;
+import com.gurnitskaya.bmanager.impl.LeagueImplDAO;
 import com.gurnitskaya.bmanager.model.BetWrapper;
 
 import javafx.fxml.FXML;
@@ -16,27 +23,10 @@ import javafx.stage.Stage;
  * @author Olga Gurnitskaya
  */
 public class BetEditDialogController {
-	enum League{
-		SERIA_A("Seria A"), PREMIER("Premier league");
-		private String league;
-		private League(String league){
-			this.league = league;
-		}
-		public String getLeague(){
-			return league;
-		}
-		public static League getValue(String league){
-			for(League value :League.values()){
-				if(value.getLeague().equals(league))
-					return value;
-			}
-			return null;
-		}
-	}
     @FXML
     private DatePicker dateField;
     @FXML
-    private ComboBox<League> leagueField;
+    private ComboBox<String> leagueField;
     @FXML
     private TextField homeCommandField;
     @FXML
@@ -55,13 +45,17 @@ public class BetEditDialogController {
     private Stage dialogStage;
     private BetWrapper bet;
     private boolean okClicked = false;
-    
+    private LeagueImplDAO leagueImpl = new LeagueImplDAO();
+    private List<String> leagueName = new ArrayList<>();
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
      */
     @FXML
     private void initialize() {
+    	for(League league :leagueImpl.getAllLeagues()){
+    		leagueName.add(league.getName());
+    	};
     }
 
     /**
@@ -82,11 +76,11 @@ public class BetEditDialogController {
         this.bet = bet;
         dateField.setValue(bet.getDate());
         dateField.setPromptText("dd.mm.yyyy");
-        leagueField.getItems().addAll(League.values());
+        leagueField.getItems().addAll(leagueName);
         if(bet.getLeague() == null){
-        	leagueField.setValue(League.PREMIER);
+        	leagueField.setValue(leagueName.get(0));
         } else {
-        	leagueField.setValue(League.getValue(bet.getLeague()));
+        	leagueField.setValue(bet.getLeague());
         }
         homeCommandField.setText(bet.getHomeCommand());
         guestCommandField.setText(bet.getGuestCommand());
@@ -113,7 +107,7 @@ public class BetEditDialogController {
     private void handleOk() {
         if (isInputValid()) {
             bet.setDate(dateField.getValue());
-            bet.setLeague(leagueField.getValue().league);
+            bet.setLeague(leagueField.getValue());
             bet.setHomeCommand(homeCommandField.getText());
             bet.setGuestCommand(guestCommandField.getText());
             bet.setType(typeField.getText());

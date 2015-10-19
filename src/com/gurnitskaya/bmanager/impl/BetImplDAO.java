@@ -20,7 +20,6 @@ public class BetImplDAO extends AbstractHibernateHelper implements BetDAO{
 		Integer betID = null;
 		try {
 			tx = session.beginTransaction();
-//			bet = new Bet(new Date(), "Bundesliga", "Bayer", "Munech", "df", 45, 1.2, 12, "3-0");
 			betID = (Integer) session.save(bet);
 			System.out.println(betID);
 			tx.commit();
