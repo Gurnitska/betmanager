@@ -34,9 +34,9 @@ fx:controller="com.gurnitskaya.bmanager.view.BetEditDialogController">
             <Label text="Bet koef" GridPane.rowIndex="6" />
             <Label text="Result" GridPane.rowIndex="7" />
             <Label text="Game result" GridPane.rowIndex="8" />
-            <TextField fx:id="homeCommandField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="guestCommandField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextField fx:id="typeField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <ComboBox fx:id="homeCommandField" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ComboBox fx:id="guestCommandField" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <ComboBox fx:id="typeField" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextField fx:id="valueField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <TextField fx:id="koefField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <TextField fx:id="resultField" GridPane.columnIndex="1" GridPane.rowIndex="7" />

@@ -8,13 +8,15 @@ import com.gurnitskaya.bmanager.beans.League;
 
 public interface LeagueDAO {
 
-	public void addLeague(League league) throws SQLException; 
+	public void addLeague(League league); 
 
-	public void updateLeague(League league) throws SQLException;
+	public void updateLeague(League league);
 
-	public League getLeagueById(Long id) throws SQLException; 
+	public League getLeagueById(Long id);
+	
+	public League getLeagueByName(String name); 
 
-	public List<League> getAllLeagues() throws SQLException; 
+	public List<League> getAllLeagues(); 
 
-	public void deleteLeague(League league) throws SQLException;
+	public void deleteLeague(League league);
 }

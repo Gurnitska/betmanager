@@ -1,16 +1,21 @@
 package com.gurnitskaya.bmanager.view;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.controlsfx.dialog.Dialogs;
 
 import com.gurnitskaya.bmanager.beans.League;
+import com.gurnitskaya.bmanager.beans.League_Command;
+import com.gurnitskaya.bmanager.beans.Type;
+import com.gurnitskaya.bmanager.dao.LeagueDAO;
+import com.gurnitskaya.bmanager.dao.TypeDAO;
 import com.gurnitskaya.bmanager.impl.LeagueImplDAO;
+import com.gurnitskaya.bmanager.impl.TypeImplDAO;
 import com.gurnitskaya.bmanager.model.BetWrapper;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -28,11 +33,11 @@ public class BetEditDialogController {
     @FXML
     private ComboBox<String> leagueField;
     @FXML
-    private TextField homeCommandField;
+    private ComboBox<String> homeCommandField;
     @FXML
-    private TextField guestCommandField;
+    private ComboBox<String> guestCommandField;
     @FXML
-    private TextField typeField;
+    private ComboBox<String> typeField;
     @FXML
     private TextField valueField;
     @FXML
@@ -45,18 +50,25 @@ public class BetEditDialogController {
     private Stage dialogStage;
     private BetWrapper bet;
     private boolean okClicked = false;
-    private LeagueImplDAO leagueImpl = new LeagueImplDAO();
-    private List<String> leagueName = new ArrayList<>();
+    private LeagueDAO leagueImpl = new LeagueImplDAO();
+    private TypeDAO typeImpl = new TypeImplDAO();
+    private List<League> leagues = new ArrayList<>();
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
      */
-    @FXML
-    private void initialize() {
-    	for(League league :leagueImpl.getAllLeagues()){
-    		leagueName.add(league.getName());
-    	};
-    }
+	@FXML
+	private void initialize() {
+		List<League> leagues = leagueImpl.getAllLeagues();
+		for (League league : leagues) {
+			this.leagues.add(league);
+			leagueField.getItems().add(league.getName());
+		}
+		List<Type> types = typeImpl.getAllTypes();
+		for(Type type: types){
+			typeField.getItems().add(type.getName());
+		}
+	}
 
     /**
      * Sets the stage of this dialog.
@@ -74,23 +86,55 @@ public class BetEditDialogController {
      */
     public void setBet(BetWrapper bet) {
         this.bet = bet;
+        if(bet.getBet().getId() == 0){
+        	setNewBet(bet);
+        } else {
+        	setEditableBet(bet);
+        }
         dateField.setValue(bet.getDate());
         dateField.setPromptText("dd.mm.yyyy");
-        leagueField.getItems().addAll(leagueName);
-        if(bet.getLeague() == null){
-        	leagueField.setValue(leagueName.get(0));
-        } else {
-        	leagueField.setValue(bet.getLeague());
+        if("".equals(bet.getType()) || bet.getType() == null){
+        	typeField.setValue(typeField.getItems().get(0));
+        }else{
+        	typeField.setValue(bet.getType());
         }
-        homeCommandField.setText(bet.getHomeCommand());
-        guestCommandField.setText(bet.getGuestCommand());
-        typeField.setText(bet.getType());
+
         valueField.setText(bet.getValue().toString());
         koefField.setText(bet.getKoef().toString());
         resultField.setText(bet.getResult().toString());
         scoreField.setText(bet.getScore());
+		leagueField.valueProperty().addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				Object[] lc = leagueImpl.getLeagueByName(newValue).getLeague_command().toArray();
+				setCommandFields(lc);
+			}
+		});
+    }
+    private void setCommandFields(Object[] lc){
+		homeCommandField.getItems().clear();
+		guestCommandField.getItems().clear();
+		for (Object object : lc) {
+			String command = ((League_Command) object).getId().getCommand().getName();
+			homeCommandField.getItems().add(command);
+			guestCommandField.getItems().add(command);
+		}
+		homeCommandField.setValue(((League_Command) lc[0]).getId().getCommand().getName());
+		guestCommandField.setValue(((League_Command) lc[0]).getId().getCommand().getName());
+    }
+    private void setEditableBet(BetWrapper bet){
+    	leagueField.setValue(bet.getLeague());
+    	homeCommandField.setValue(bet.getHomeCommand());
+    	guestCommandField.setValue(bet.getGuestCommand());
     }
     
+    private void setNewBet(BetWrapper bet){
+        Object[] lc = leagues.get(0).getLeague_command().toArray();
+        setCommandFields(lc);
+    	leagueField.setValue(leagues.get(0).getName());
+    	
+    }
     /**
      * Returns true if the user clicked OK, false otherwise.
      * 
@@ -108,17 +152,18 @@ public class BetEditDialogController {
         if (isInputValid()) {
             bet.setDate(dateField.getValue());
             bet.setLeague(leagueField.getValue());
-            bet.setHomeCommand(homeCommandField.getText());
-            bet.setGuestCommand(guestCommandField.getText());
-            bet.setType(typeField.getText());
+            bet.setHomeCommand(homeCommandField.getValue());
+            bet.setGuestCommand(guestCommandField.getValue());
+            bet.setType(typeField.getValue());
             bet.setValue(Integer.parseInt(valueField.getText()));
             bet.setKoef(Double.parseDouble(koefField.getText()));
             bet.setResult(Double.parseDouble(resultField.getText()));
             bet.setScore(scoreField.getText());
-
             okClicked = true;
             dialogStage.close();
+            
         }
+        System.out.println(bet);
     }
 
     /**
@@ -147,13 +192,13 @@ public class BetEditDialogController {
         if (leagueField.getValue() == null) {
             errorMessage += "No valid league!\n"; 
         }
-        if (homeCommandField.getText() == null || homeCommandField.getText().length() == 0) {
+        if (homeCommandField.getValue() == null || homeCommandField.getValue().length() == 0) {
             errorMessage += "No valid home command!\n"; 
         }
-        if (guestCommandField.getText() == null || guestCommandField.getText().length() == 0) {
+        if (guestCommandField.getValue() == null || guestCommandField.getValue().length() == 0) {
             errorMessage += "No valid guest command!\n"; 
         }
-        if (typeField.getText() == null || typeField.getText().length() == 0) {
+        if (typeField.getValue() == null || typeField.getValue().length() == 0) {
             errorMessage += "No valid bet type!\n"; 
         }
         

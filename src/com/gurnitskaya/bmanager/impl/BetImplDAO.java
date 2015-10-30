@@ -38,8 +38,46 @@ public class BetImplDAO extends AbstractHibernateHelper implements BetDAO{
 
 	@Override
 	public void updateBet(Bet bet) {
-		// TODO Auto-generated method stub
-		
+		System.out.println(bet);
+		Session session = getSessionFactory().getCurrentSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			Query query = session.createQuery("update Bet "
+					+ "set date = :date,"
+					+ "score = :score,"
+					+ "homeCommand = :homeCommand,"
+					+ "guestCommand = :guestCommand,"
+					+ "koef = :koef,"
+					+ "league = :league,"
+					+ "result = :result,"
+					+ "type = :type,"
+					+ "value = :value"
+					+ " where id = :id ");
+			query.setParameter("id",bet.getId());
+			query.setParameter("date", bet.getDate());
+			query.setParameter("score", bet.getScore());
+			query.setParameter("homeCommand", bet.getHomeCommand());
+			query.setParameter("guestCommand", bet.getGuestCommand());
+			query.setParameter("koef", bet.getKoef());
+			query.setParameter("league", bet.getLeague());
+			query.setParameter("result", bet.getResult());
+			query.setParameter("type", bet.getType());
+			query.setParameter("value", bet.getValue());
+			
+			int result = query.executeUpdate();
+			System.out.println(result);
+			tx.commit();
+		} catch (HibernateException e) {
+			if (tx != null){
+				tx.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if(session.isOpen()){
+				session.close();
+			}
+		}		
 	}
 
 	@Override

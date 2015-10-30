@@ -20,13 +20,13 @@ import com.gurnitskaya.bmanager.impl.LeagueImplDAO;
 
 public class TestLeagueImplDAO {
 
-	@Test
+//	@Test
 	public void testAddLeague() {
 		CommandImplDAO comImpl = new CommandImplDAO();
 		League league = new League();
 		Set<League_Command> leagues_commands = new HashSet<>();
 		LeagueCommandId id = new LeagueCommandId();
-		Command command = new Command("Bayer");
+		Command command = new Command("Gerta");
 		comImpl.addCommand(command);
 		id.setLeague(league);
 		id.setCommand(command);
@@ -39,14 +39,14 @@ public class TestLeagueImplDAO {
 
 	}
 
-//	@Test
+	@Test
 	public void testGetAllLeagues() {
 		LeagueImplDAO leagImpl = new LeagueImplDAO();
 		List<League> leagues= leagImpl.getAllLeagues();
-		System.out.println(leagues.get(0).getLeague_command());
-		for(League_Command lc: leagues.get(0).getLeague_command()){
-			System.out.println(lc.getId().getCommand());
-			System.out.println(lc.getId().getLeague());
+		System.out.println(leagues.get(4).getLeague_command());
+		for(League_Command lc: leagues.get(4).getLeague_command()){
+			System.out.println(lc.getId().getCommand().getName());
+			System.out.println(lc.getId().getLeague().getName());
 		}
 		assertNotNull(leagues);
 	}

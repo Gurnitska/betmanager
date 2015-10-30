@@ -24,8 +24,11 @@ PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sour
   
   		<property name="current_session_context_class">thread</property>
   		
-        <mapping class="com.gurnitskaya.bmanager.beans.Bet"></mapping>  
-  
+        <mapping class="com.gurnitskaya.bmanager.beans.Bet"></mapping>
+        <mapping class="com.gurnitskaya.bmanager.beans.League"></mapping>
+        <mapping class="com.gurnitskaya.bmanager.beans.Command"></mapping>
+        <mapping class="com.gurnitskaya.bmanager.beans.League_Command"></mapping>   
+        <mapping class="com.gurnitskaya.bmanager.beans.Type"></mapping> 
     </session-factory>  
   
 </hibernate-configuration> 

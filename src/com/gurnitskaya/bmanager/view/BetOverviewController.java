@@ -64,18 +64,7 @@ public class BetOverviewController {
     	valueColumn.setCellValueFactory(new PropertyValueFactory<BetWrapper, Integer>("value"));
     	koefColumn.setCellValueFactory(new PropertyValueFactory<BetWrapper, Double>("koef"));
     	resultColumn.setCellValueFactory(new PropertyValueFactory<BetWrapper, String>("result"));
-    	
-        // Clear bet details.
-//        showBetDetails(null);
-        // Listen for selection changes and show the bet details when changed.
-        betTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BetWrapper>(){
-
-			@Override
-			public void changed(ObservableValue<? extends BetWrapper> arg0, BetWrapper oldValue, BetWrapper newValue) {
-				
-			}
-        	
-        });
+    
     }
 
     /**
@@ -117,16 +106,18 @@ public class BetOverviewController {
         if (bet != null) {
             boolean okClicked = main.showBetNewEditDialog(bet, "Edit bet");
             if (okClicked) {
-//            	main.getBetData().add(bet);
             	main.getBetImpl().updateBet(bet.getBet());
+            	betTable.getItems().remove(bet);
+            	betTable.getItems().add(bet);
+            	betTable.getSelectionModel().select(bet);
             }
 
         } else {
             // Nothing selected.
             Dialogs.create()
                 .title("No Selection")
-                .masthead("No Person Selected")
-                .message("Please select a person in the table.")
+                .masthead("No Bet Selected")
+                .message("Please select a bet in the table.")
                 .showWarning();
         }
     }

@@ -56,6 +56,7 @@ public class RootLayoutController {
     }
     @FXML
     private void handleEdit() {
+    	
     	controller.handleEditBet();
     }
     @FXML

@@ -1,6 +1,5 @@
 package com.gurnitskaya.bmanager.impl;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -43,7 +42,7 @@ public class LeagueImplDAO extends AbstractHibernateHelper implements LeagueDAO 
 	}
 
 	@Override
-	public void updateLeague(League league) throws SQLException {
+	public void updateLeague(League league){
 		// TODO Auto-generated method stub
 
 	}
@@ -107,9 +106,38 @@ public class LeagueImplDAO extends AbstractHibernateHelper implements LeagueDAO 
 	}
 
 	@Override
-	public void deleteLeague(League league) throws SQLException {
+	public void deleteLeague(League league){
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public League getLeagueByName(String name) {
+		Session session = getSessionFactory().getCurrentSession();
+		Transaction tx = null;
+		List<League> leagues = null;
+		try {
+			tx = session.beginTransaction();
+			Query query = session.createQuery("from League where name = \'" + name + "\'");
+			leagues = (List<League>) query.list();
+			java.util.Iterator<League> iter = leagues.iterator();
+			System.out.println(leagues);
+			while (iter.hasNext()) {
+				League league = iter.next();
+				System.out.println("League: \"" + league.getId() + "\", " + league.getName());
+			}
+			tx.commit();
+		} catch (HibernateException e) {
+			if (tx != null){
+				tx.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if(session.isOpen()){
+				session.close();
+			}
+		}
+		return leagues.get(0);
 	}
 
 }
